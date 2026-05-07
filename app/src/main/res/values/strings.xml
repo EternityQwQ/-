@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ThermalFaker</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="refresh">Refresh</string>
+    <string name="apply">Apply</string>
+    <string name="set">Set</string>
+    <string name="reset">Reset</string>
+    <string name="reset_all">Reset All</string>
+    <string name="about">About</string>
+    <string name="celsius">Celsius</string>
+    <string name="temperature_celsius">Temperature (°C)</string>
+
+    <!-- Shizuku -->
+    <string name="shizuku_status">Shizuku Status</string>
+    <string name="shizuku_unavailable">Shizuku unavailable</string>
+    <string name="shizuku_not_installed">Shizuku not installed</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="connected">Connected</string>
+    <string name="grant_permission">Grant Permission</string>
+
+    <!-- Temperature -->
+    <string name="current_temperature">Current Temperature</string>
+    <string name="current_spoofed">Current (Spoofed)</string>
+    <string name="target_temperature">Target Temperature</string>
+    <string name="apply_spoof">Apply Spoof</string>
+
+    <!-- Hardware Dashboard -->
+    <string name="hardware_dashboard">Hardware Dashboard</string>
+    <string name="monitor_and_spoof_all_hardware">Monitor and spoof all hardware temperatures</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="global_temperature_control">Global Temperature Control</string>
+    <string name="set_all_temperatures_at_once">Set all temperatures at once</string>
+    <string name="current">Current</string>
+    <string name="real">Real</string>
+    <string name="spoofed">SPOOFED</string>
+    <string name="spoofed_to">Spoofed to %d°C</string>
+    <string name="not_supported_on_this_device">Not supported on this device</string>
+
+    <!-- Hardware Types -->
+    <string name="battery_temperature">Battery Temperature</string>
+    <string name="cpu_temperature">CPU Temperature</string>
+    <string name="gpu_temperature">GPU Temperature</string>
+    <string name="ambient_temperature">Ambient Temperature</string>
+    <string name="cpu_frequencies">CPU Frequencies</string>
+    <string name="gpu_frequency">GPU Frequency</string>
 </resources>

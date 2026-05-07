@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
@@ -22,10 +23,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.thermalfaker.app.R
 import com.thermalfaker.app.core.shizuku.ShizukuStatus
 import com.thermalfaker.app.ui.theme.ThermalBlue
 import com.thermalfaker.app.ui.theme.ThermalRed
@@ -37,6 +40,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun MainScreen(
     onNavigateToInfo: () -> Unit,
+    onNavigateToDashboard: () -> Unit,
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -47,10 +51,13 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("ThermalFaker") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
+                    IconButton(onClick = onNavigateToDashboard) {
+                        Icon(Icons.Default.Dashboard, contentDescription = stringResource(R.string.hardware_dashboard))
+                    }
                     IconButton(onClick = onNavigateToInfo) {
-                        Icon(Icons.Default.Info, contentDescription = "Info")
+                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.about))
                     }
                 }
             )
@@ -69,6 +76,11 @@ fun MainScreen(
                 status = shizukuStatus,
                 onRequestPermission = viewModel::requestShizukuPermission
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Dashboard Navigation Card
+            DashboardNavigationCard(onNavigateToDashboard = onNavigateToDashboard)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -140,6 +152,56 @@ fun MainScreen(
 }
 
 @Composable
+fun DashboardNavigationCard(
+    onNavigateToDashboard: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+        ),
+        onClick = onNavigateToDashboard
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Dashboard,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = stringResource(R.string.hardware_dashboard),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.monitor_and_spoof_all_hardware),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun ShizukuStatusCard(
     status: ShizukuStatus,
     onRequestPermission: () -> Unit
@@ -172,17 +234,17 @@ fun ShizukuStatusCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Shizuku Status",
+                        text = stringResource(R.string.shizuku_status),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = when (status) {
-                            ShizukuStatus.Unavailable -> "Shizuku unavailable"
-                            ShizukuStatus.NotInstalled -> "Shizuku not installed"
-                            ShizukuStatus.PermissionDenied -> "Permission denied"
-                            ShizukuStatus.PermissionGranted -> "Permission granted"
-                            ShizukuStatus.Connected -> "Connected"
+                            ShizukuStatus.Unavailable -> stringResource(R.string.shizuku_unavailable)
+                            ShizukuStatus.NotInstalled -> stringResource(R.string.shizuku_not_installed)
+                            ShizukuStatus.PermissionDenied -> stringResource(R.string.permission_denied)
+                            ShizukuStatus.PermissionGranted -> stringResource(R.string.permission_granted)
+                            ShizukuStatus.Connected -> stringResource(R.string.connected)
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -195,7 +257,7 @@ fun ShizukuStatusCard(
                     onClick = onRequestPermission,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Grant Permission")
+                    Text(stringResource(R.string.grant_permission))
                 }
             }
         }
@@ -223,7 +285,7 @@ fun TemperatureDisplay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = if (isSpoofingActive) "Current (Spoofed)" else "Current Temperature",
+                text = if (isSpoofingActive) stringResource(R.string.current_spoofed) else stringResource(R.string.current_temperature),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium
             )
@@ -245,7 +307,7 @@ fun TemperatureDisplay(
                         }
                     )
                     Text(
-                        text = "Celsius",
+                        text = stringResource(R.string.celsius),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -255,9 +317,9 @@ fun TemperatureDisplay(
                 onClick = onRefresh,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Refresh")
+                Text(stringResource(R.string.refresh))
             }
         }
     }
@@ -311,7 +373,7 @@ fun TargetTemperatureInput(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Target Temperature",
+                text = stringResource(R.string.target_temperature),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -323,7 +385,7 @@ fun TargetTemperatureInput(
                     onUpdateTemp(temp.coerceIn(-20, 100))
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Temperature (°C)") },
+                label = { Text(stringResource(R.string.temperature_celsius)) },
                 leadingIcon = { Icon(Icons.Default.Thermostat, contentDescription = null) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -371,7 +433,7 @@ fun ActionButtons(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Apply Spoof", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.apply_spoof), style = MaterialTheme.typography.titleMedium)
             }
         }
 
@@ -382,7 +444,7 @@ fun ActionButtons(
             shape = RoundedCornerShape(12.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
-            Text("Reset", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.reset), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
