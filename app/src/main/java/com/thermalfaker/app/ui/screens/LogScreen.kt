@@ -1,6 +1,5 @@
 package com.thermalfaker.app.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,8 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Monospace
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -88,11 +86,6 @@ fun LogScreen(
                             MaterialTheme.colorScheme.errorContainer
                         } else {
                             MaterialTheme.colorScheme.primaryContainer
-                        },
-                        contentColor = if (message.contains("failed", ignoreCase = true)) {
-                            MaterialTheme.colorScheme.onErrorContainer
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
                         }
                     ) {
                         Text(message)
@@ -148,7 +141,7 @@ fun LogItem(log: LogEntry) {
         shape = MaterialTheme.shapes.small,
         color = when (log.level) {
             LogLevel.ERROR -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-            LogLevel.WARN -> MaterialTheme.colorScheme.warningContainer.copy(alpha = 0.3f)
+            LogLevel.WARN -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
             else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         },
         modifier = Modifier.fillMaxWidth()
@@ -162,7 +155,7 @@ fun LogItem(log: LogEntry) {
                     text = timeStr,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontFamily = Monospace
+                    fontFamily = FontFamily.Monospace
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -170,7 +163,7 @@ fun LogItem(log: LogEntry) {
                     style = MaterialTheme.typography.labelSmall,
                     color = when (log.level) {
                         LogLevel.ERROR -> MaterialTheme.colorScheme.error
-                        LogLevel.WARN -> MaterialTheme.colorScheme.warning
+                        LogLevel.WARN -> MaterialTheme.colorScheme.tertiary
                         LogLevel.INFO -> MaterialTheme.colorScheme.primary
                         LogLevel.DEBUG -> MaterialTheme.colorScheme.onSurfaceVariant
                     }
@@ -186,7 +179,7 @@ fun LogItem(log: LogEntry) {
             Text(
                 text = log.message,
                 style = MaterialTheme.typography.bodySmall,
-                fontFamily = Monospace,
+                fontFamily = FontFamily.Monospace,
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis
             )
