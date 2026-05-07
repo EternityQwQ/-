@@ -14,7 +14,7 @@ import com.thermalfaker.app.core.shizuku.ShizukuManager
 import com.thermalfaker.app.ui.navigation.ThermalFakerNavHost
 import com.thermalfaker.app.ui.theme.ThermalFakerTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dev.rikka.shizuku.Shizuku
+import rikka.shizuku.Shizuku
 import javax.inject.Inject
 
 @AndroidEntryPoint

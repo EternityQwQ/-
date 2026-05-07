@@ -2,18 +2,13 @@ package com.thermalfaker.app.core.shizuku
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.IBinder
 import android.os.RemoteException
 import com.thermalfaker.app.core.util.Logger
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.rikka.shizuku.Shizuku
-import dev.rikka.shizuku.ShizukuProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import rikka.shizuku.Shizuku
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +17,7 @@ sealed class ShizukuStatus {
     data object NotInstalled : ShizukuStatus()
     data object PermissionDenied : ShizukuStatus()
     data object PermissionGranted : ShizukuStatus()
-    data object Connected : ShizukuStatus()
+    data object BinderReceived : ShizukuStatus()
 }
 
 @Singleton
@@ -34,34 +29,69 @@ class ShizukuManager @Inject constructor(
 
     private val permissionRequestCode = 1001
 
-    init {
-        checkShizuku()
+    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
+        Logger.d("Shizuku binder received")
+        _status.value = ShizukuStatus.BinderReceived
+        checkPermissionStatus()
     }
 
-    private fun checkShizuku() {
-        try {
-            if (!Shizuku.isPreV11()) {
-                _status.value = ShizukuStatus.Unavailable
-                return
-            }
-        } catch (e: Exception) {
-            Logger.e("Shizuku is not available", e)
-            _status.value = ShizukuStatus.NotInstalled
-            return
-        }
+    private val binderDeadListener = Shizuku.OnBinderDeadListener {
+        Logger.d("Shizuku binder dead")
+        _status.value = ShizukuStatus.Unavailable
+    }
 
-        if (checkSelfPermission()) {
-            _status.value = ShizukuStatus.PermissionGranted
-        } else {
-            _status.value = ShizukuStatus.PermissionDenied
+    private val permissionResultListener = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
+        if (requestCode == permissionRequestCode) {
+            if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                Logger.d("Shizuku permission granted")
+                _status.value = ShizukuStatus.PermissionGranted
+            } else {
+                Logger.d("Shizuku permission denied")
+                _status.value = ShizukuStatus.PermissionDenied
+            }
+        }
+    }
+
+    init {
+        try {
+            Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
+            Shizuku.addBinderDeadListener(binderDeadListener)
+            Logger.d("Shizuku listeners registered")
+        } catch (e: Throwable) {
+            Logger.e("Failed to register Shizuku listeners", e)
+            _status.value = ShizukuStatus.NotInstalled
+        }
+    }
+
+    private fun checkPermissionStatus() {
+        try {
+            when {
+                Shizuku.isPreV11() -> {
+                    Logger.d("Shizuku pre-v11 detected")
+                    _status.value = ShizukuStatus.Unavailable
+                }
+                Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
+                    Logger.d("Shizuku permission already granted")
+                    _status.value = ShizukuStatus.PermissionGranted
+                }
+                Shizuku.shouldShowRequestPermissionRationale() -> {
+                    Logger.d("Shizuku permission rationale shown")
+                    _status.value = ShizukuStatus.PermissionDenied
+                }
+                else -> {
+                    _status.value = ShizukuStatus.PermissionDenied
+                }
+            }
+        } catch (e: Throwable) {
+            Logger.e("Error checking Shizuku permission", e)
+            _status.value = ShizukuStatus.NotInstalled
         }
     }
 
     fun checkSelfPermission(): Boolean {
         return try {
-            if (!Shizuku.isPreV11()) return false
-            Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-        } catch (e: Exception) {
+            !Shizuku.isPreV11() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+        } catch (e: Throwable) {
             Logger.e("Failed to check Shizuku permission", e)
             false
         }
@@ -69,35 +99,14 @@ class ShizukuManager @Inject constructor(
 
     fun requestPermission() {
         try {
-            if (!Shizuku.isPreV11()) {
+            if (Shizuku.isPreV11()) {
                 _status.value = ShizukuStatus.Unavailable
                 return
             }
-            if (Shizuku.shouldShowRequestPermissionRationale()) {
-                _status.value = ShizukuStatus.PermissionDenied
-                return
-            }
             Shizuku.requestPermission(permissionRequestCode)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Logger.e("Failed to request Shizuku permission", e)
-        }
-    }
-
-    fun executeCommand(command: String): String {
-        return try {
-            if (!checkSelfPermission()) {
-                return "Error: Shizuku permission not granted"
-            }
-            val process = Runtime.getRuntime().exec("sh")
-            process.outputStream.bufferedWriter().use { it.write(command) }
-            process.waitFor()
-            val result = process.inputStream.bufferedReader().readText()
-            val error = process.errorStream.bufferedReader().readText()
-            if (error.isNotEmpty()) Logger.e("Command error: $error")
-            result
-        } catch (e: Exception) {
-            Logger.e("Failed to execute command", e)
-            "Error: ${e.message}"
+            _status.value = ShizukuStatus.NotInstalled
         }
     }
 
@@ -107,13 +116,26 @@ class ShizukuManager @Inject constructor(
                 return "Error: Shizuku permission not granted"
             }
             val result = Shizuku.exec(arrayOf("sh", "-c", command), null, null)
-            return buildString {
+            buildString {
                 if (result.out != null) append(String(result.out))
                 if (result.err != null) append("\nError: ").append(String(result.err))
             }
         } catch (e: RemoteException) {
             Logger.e("Failed to execute shell command via Shizuku", e)
             "Error: ${e.message}"
+        } catch (e: Throwable) {
+            Logger.e("Unexpected error executing shell command", e)
+            "Error: ${e.message}"
+        }
+    }
+
+    fun cleanup() {
+        try {
+            Shizuku.removeBinderReceivedListener(binderReceivedListener)
+            Shizuku.removeBinderDeadListener(binderDeadListener)
+            Shizuku.removeRequestPermissionResultListener(permissionResultListener)
+        } catch (e: Throwable) {
+            Logger.e("Error cleaning up Shizuku listeners", e)
         }
     }
 }

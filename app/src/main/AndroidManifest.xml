@@ -24,7 +24,7 @@
         </activity>
 
         <provider
-            android:name="dev.rikka.shizuku.ShizukuProvider"
+            android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"
             android:exported="true"
             android:multiprocess="false"
