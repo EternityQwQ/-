@@ -44,10 +44,7 @@ fun InfoScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // App Info Card
-            Card(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Card(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -80,7 +77,6 @@ fun InfoScreen(
                 }
             }
 
-            // Features Card
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -104,7 +100,6 @@ fun InfoScreen(
                 }
             }
 
-            // Requirements Card
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -128,7 +123,6 @@ fun InfoScreen(
                 }
             }
 
-            // How it works Card
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
@@ -150,7 +144,6 @@ fun InfoScreen(
                 }
             }
 
-            // Logs Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onNavigateToLogs
@@ -181,7 +174,7 @@ fun InfoScreen(
                 }
             }
         }
-    )
+    }
 }
 
 @Composable
