@@ -3,6 +3,7 @@ package com.thermalfaker.app.core.shizuku
 import android.content.Context
 import com.thermalfaker.app.core.util.Logger
 import com.thermalfaker.app.data.model.HardwareType
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -10,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TemperatureManager @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     private val shizukuManager: ShizukuManager
 ) {
 
