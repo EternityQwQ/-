@@ -20,6 +20,7 @@
     <string name="permission_denied">Permission denied</string>
     <string name="permission_granted">Permission granted</string>
     <string name="connected">Connected</string>
+    <string name="binder_received">Binder received</string>
     <string name="grant_permission">Grant Permission</string>
 
     <!-- Temperature -->

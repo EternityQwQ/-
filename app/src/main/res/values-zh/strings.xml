@@ -20,6 +20,7 @@
     <string name="permission_denied">权限被拒绝</string>
     <string name="permission_granted">权限已授予</string>
     <string name="connected">已连接</string>
+    <string name="binder_received">Binder 已接收</string>
     <string name="grant_permission">授予权限</string>
 
     <!-- 温度 -->

@@ -210,7 +210,7 @@ fun ShizukuStatusCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (status) {
-                ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
+                ShizukuStatus.PermissionGranted, ShizukuStatus.BinderReceived ->
                     MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
                 else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
             }
@@ -226,7 +226,7 @@ fun ShizukuStatusCard(
                     imageVector = Icons.Default.Thermostat,
                     contentDescription = "Shizuku",
                     tint = when (status) {
-                        ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
+                        ShizukuStatus.PermissionGranted, ShizukuStatus.BinderReceived ->
                             MaterialTheme.colorScheme.primary
                         else -> MaterialTheme.colorScheme.error
                     }
@@ -244,7 +244,7 @@ fun ShizukuStatusCard(
                             ShizukuStatus.NotInstalled -> stringResource(R.string.shizuku_not_installed)
                             ShizukuStatus.PermissionDenied -> stringResource(R.string.permission_denied)
                             ShizukuStatus.PermissionGranted -> stringResource(R.string.permission_granted)
-                            ShizukuStatus.Connected -> stringResource(R.string.connected)
+                            ShizukuStatus.BinderReceived -> stringResource(R.string.binder_received)
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )

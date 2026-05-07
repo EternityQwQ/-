@@ -6,6 +6,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -153,7 +155,7 @@ fun InfoScreen(
 fun FeatureItem(title: String, description: String) {
     Row(modifier = Modifier.padding(vertical = 8.dp)) {
         Icon(
-            imageVector = Icons.Default.CheckCircle,
+            imageVector = Icons.Filled.CheckCircle,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(top = 2.dp)
@@ -178,7 +180,7 @@ fun FeatureItem(title: String, description: String) {
 fun RequirementItem(title: String, description: String) {
     Row(modifier = Modifier.padding(vertical = 8.dp)) {
         Icon(
-            imageVector = Icons.Default.Info,
+            imageVector = Icons.Filled.Info,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(top = 2.dp)

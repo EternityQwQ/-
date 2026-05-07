@@ -115,10 +115,14 @@ class ShizukuManager @Inject constructor(
             if (!checkSelfPermission()) {
                 return "Error: Shizuku permission not granted"
             }
-            val result = Shizuku.exec(arrayOf("sh", "-c", command), null, null)
+            val process = java.lang.ProcessBuilder("sh", "-c", command).start()
+            process.waitFor()
             buildString {
-                if (result.out != null) append(String(result.out))
-                if (result.err != null) append("\nError: ").append(String(result.err))
+                append(process.inputStream.bufferedReader().readText())
+                val errorText = process.errorStream.bufferedReader().readText()
+                if (errorText.isNotEmpty()) {
+                    append("\nError: ").append(errorText)
+                }
             }
         } catch (e: RemoteException) {
             Logger.e("Failed to execute shell command via Shizuku", e)

@@ -681,7 +681,7 @@ private fun CpuCoreChip(core: CpuCoreInfo) {
             if (core.maxFrequency > 0) {
                 Spacer(modifier = Modifier.height(4.dp))
                 LinearProgressIndicator(
-                    progress = { animatedProgress },
+                    progress = animatedProgress,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp),

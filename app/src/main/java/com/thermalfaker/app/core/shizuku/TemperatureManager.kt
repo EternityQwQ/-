@@ -46,7 +46,16 @@ class TemperatureManager @Inject constructor(
     fun getCurrentBatteryTemperature(): Int {
         return try {
             val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
-            batteryManager?.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_TEMPERATURE)?.let { it / 10 } ?: 0
+            batteryManager?.let {
+                try {
+                    val method = android.os.BatteryManager::class.java.getMethod("getIntProperty", Int::class.java)
+                    val temp = method.invoke(it, 7) as Int
+                    temp / 10
+                } catch (e: Exception) {
+                    Logger.e("Failed to get battery temperature via reflection", e)
+                    0
+                }
+            } ?: 0
         } catch (e: Exception) {
             Logger.e("Failed to get battery temperature", e)
             0
