@@ -13,6 +13,22 @@ A modern Android app for spoofing device temperatures using Shizuku.
 - **Modern Material 3 UI**: Beautiful, dynamic theming with dark mode support
 - **Real-time Temperature Display**: Shows current temperature with animated thermometer arc
 - **Bilingual Support**: English and Chinese (Simplified) localization
+- **Debug Log Export**: Real-time logging with export to download directory
+
+## Debug Log Features
+
+### Log Collection
+- **Shizuku Events**: Permission requests, binding status changes
+- **ADB Commands**: Every shell command executed and its output
+- **Temperature Spoofing**: Spoof apply and reset operations
+- **Hardware Detection**: Success/failure of sensor readings
+- **Error Tracking**: All exceptions and error messages
+
+### Log Management
+- **Real-time Display**: Live log stream with scrollable list
+- **Level Filtering**: Color-coded DEBUG/INFO/WARN/ERROR levels
+- **Export Function**: Export logs to `.txt` file in Download directory
+- **Clear Function**: Clear all logs with single tap
 
 ## Hardware Dashboard Features
 
@@ -122,7 +138,8 @@ com.thermalfaker.app/
 │   │   ├── TemperatureManager.kt   # Temperature command execution
 │   │   └── HardwareMonitor.kt      # Hardware detection & monitoring
 │   └── util/
-│       └── Logger.kt               # Simple logging utility
+│       ├── Logger.kt               # Simple logging utility
+│       └── LogManager.kt           # Log collection and export manager
 ├── data/
 │   └── model/
 │       └── AppModels.kt            # Data models for UI state & settings
@@ -173,6 +190,22 @@ This project is provided for educational purposes only. Temperature spoofing may
 - **现代 Material 3 UI**: 美观的动态主题，支持深色模式
 - **实时温度显示**: 使用动画温度计弧形显示当前温度
 - **双语支持**: 英文和简体中文本地化
+- **调试日志导出**: 实时日志记录，可导出到下载目录
+
+## 调试日志功能
+
+### 日志收集
+- **Shizuku 事件**: 权限请求、绑定状态变化
+- **ADB 命令**: 执行的每个 shell 命令及其输出
+- **温度伪装**: 伪装应用和重置操作
+- **硬件检测**: 传感器读取成功/失败信息
+- **错误追踪**: 所有异常和错误消息
+
+### 日志管理
+- **实时显示**: 实时日志流，支持滚动列表
+- **级别过滤**: 彩色编码 DEBUG/INFO/WARN/ERROR 级别
+- **导出功能**: 导出日志到下载目录的 `.txt` 文件
+- **清空功能**: 一键清除所有日志
 
 ## 硬件仪表盘功能
 
@@ -257,6 +290,13 @@ cd thermalfaker
 5. 使用"全局温度控制"一次性设置所有温度
 6. 点击"重置"或"全部重置"恢复真实值
 
+### 调试日志
+1. 从主屏幕点击右上角"Info"图标进入关于页面
+2. 点击"调试日志"卡片进入日志界面
+3. 查看实时日志流（最新日志在顶部）
+4. 点击下载图标导出日志到下载目录
+5. 点击清空图标清除所有日志
+
 ## 技术栈
 
 | 组件 | 技术 |
@@ -282,7 +322,8 @@ com.thermalfaker.app/
 │   │   ├── TemperatureManager.kt   # 温度命令执行
 │   │   └── HardwareMonitor.kt      # 硬件检测和监控
 │   └── util/
-│       └── Logger.kt               # 简单日志工具
+│       ├── Logger.kt               # 简单日志工具
+│       └── LogManager.kt           # 日志收集和导出管理器
 ├── data/
 │   └── model/
 │       └── AppModels.kt            # UI 状态和设置的数据模型
