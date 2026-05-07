@@ -54,6 +54,7 @@ build/
 *.ear
 gradle-app.setting
 !gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 .gradletasknamecache
 
 # ===== Android Build =====
