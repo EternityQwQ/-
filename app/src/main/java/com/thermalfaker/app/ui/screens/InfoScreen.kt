@@ -3,7 +3,6 @@ package com.thermalfaker.app.ui.screens
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.thermalfaker.app.ui.theme.ThermalBlue
@@ -58,7 +56,6 @@ fun InfoScreen(
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // App Logo Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -67,7 +64,6 @@ fun InfoScreen(
                     modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Gradient Logo
                     Box(
                         modifier = Modifier
                             .size(100.dp)
@@ -86,15 +82,15 @@ fun InfoScreen(
                             color = Color.White
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "ThermalFaker",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Text(
                         text = "Version 1.0.0",
                         style = MaterialTheme.typography.bodyMedium,
@@ -103,7 +99,6 @@ fun InfoScreen(
                 }
             }
 
-            // Author Section Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -114,7 +109,6 @@ fun InfoScreen(
                     modifier = Modifier.padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Author Avatar
                     Box(
                         modifier = Modifier
                             .size(72.dp)
@@ -129,19 +123,18 @@ fun InfoScreen(
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "EternityQwQ",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
-                    // GitHub Link Button
+
                     OutlinedButton(
                         onClick = {
                             val intent = Intent(
@@ -171,7 +164,6 @@ fun InfoScreen(
                 }
             }
 
-            // App Description Section
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Row(
@@ -189,27 +181,26 @@ fun InfoScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "A modern, Material Design 3 styled Android application for spoofing device temperatures using Shizuku. " +
                                "Supports battery temperature spoofing with a beautiful, animated interface.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 22.sp
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
                     )
                 }
             }
 
-            // Features Section
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.CheckCircle,
+                            imageVector = Icons.Default.Info,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -220,9 +211,9 @@ fun InfoScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     FeatureItem(
                         title = "Battery Temperature Spoofing",
                         description = "Change reported battery temperature using dumpsys commands via Shizuku"
@@ -242,7 +233,6 @@ fun InfoScreen(
                 }
             }
 
-            // License Section
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Row(
@@ -260,9 +250,9 @@ fun InfoScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
                         text = "This app is provided for educational purposes only. Temperature spoofing may violate terms of service of other apps. Use responsibly.",
                         style = MaterialTheme.typography.bodyMedium,
@@ -283,7 +273,7 @@ fun FeatureItem(title: String, description: String) {
         verticalAlignment = Alignment.Top
     ) {
         Icon(
-            imageVector = Icons.Default.CheckCircle,
+            imageVector = Icons.Default.Info,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)

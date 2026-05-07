@@ -2,13 +2,18 @@ package com.thermalfaker.app.core.shizuku
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Process
 import android.os.RemoteException
 import com.thermalfaker.app.core.util.Logger
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import rikka.shizuku.Shizuku
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -110,15 +115,24 @@ class ShizukuManager @Inject constructor(
         }
     }
 
-    fun executeShellCommand(command: String): String {
-        return try {
+    suspend fun executeShellCommand(command: String): String = withContext(Dispatchers.IO) {
+        try {
             if (!checkSelfPermission()) {
-                return "Error: Shizuku permission not granted"
+                return@withContext "Error: Shizuku permission not granted"
             }
-            val result = Shizuku.exec(arrayOf("sh", "-c", command), null, null)
+            val uid = Shizuku.getUid()
+            Logger.d("Executing as UID: $uid")
+            val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            val errorReader = BufferedReader(InputStreamReader(process.errorStream))
+            val output = reader.readText()
+            val error = errorReader.readText()
+            process.waitFor()
+            reader.close()
+            errorReader.close()
             buildString {
-                if (result.out != null) append(String(result.out))
-                if (result.err != null) append("\nError: ").append(String(result.err))
+                if (output.isNotEmpty()) append(output)
+                if (error.isNotEmpty()) append("\nError: ").append(error)
             }
         } catch (e: RemoteException) {
             Logger.e("Failed to execute shell command via Shizuku", e)

@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
@@ -64,7 +63,6 @@ fun MainScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Shizuku Status Card
             ShizukuStatusCard(
                 status = shizukuStatus,
                 onRequestPermission = viewModel::requestShizukuPermission
@@ -72,7 +70,6 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Current Temperature Display
             TemperatureDisplay(
                 currentTemp = currentTemp,
                 isSpoofingActive = settings.isBatterySpoofingActive,
@@ -81,7 +78,6 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Target Temperature Input
             TargetTemperatureInput(
                 targetTemp = settings.targetBatteryTemp,
                 onUpdateTemp = viewModel::updateTargetTemp
@@ -89,7 +85,6 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Action Buttons
             ActionButtons(
                 isLoading = uiState.isLoading,
                 isSpoofingActive = settings.isBatterySpoofingActive,
@@ -99,7 +94,6 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Snackbar for messages
             uiState.errorMessage?.let { errorMsg ->
                 Snackbar(
                     modifier = Modifier.padding(16.dp),
@@ -144,13 +138,15 @@ fun ShizukuStatusCard(
     status: ShizukuStatus,
     onRequestPermission: () -> Unit
 ) {
+    val isGranted = status == ShizukuStatus.PermissionGranted
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = when (status) {
-                ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
-                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-                else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
+            containerColor = if (isGranted) {
+                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+            } else {
+                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
             }
         )
     ) {
@@ -163,10 +159,10 @@ fun ShizukuStatusCard(
                 Icon(
                     imageVector = Icons.Default.Thermostat,
                     contentDescription = "Shizuku",
-                    tint = when (status) {
-                        ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
-                            MaterialTheme.colorScheme.primary
-                        else -> MaterialTheme.colorScheme.error
+                    tint = if (isGranted) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.error
                     }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -182,7 +178,7 @@ fun ShizukuStatusCard(
                             ShizukuStatus.NotInstalled -> "Shizuku not installed"
                             ShizukuStatus.PermissionDenied -> "Permission denied"
                             ShizukuStatus.PermissionGranted -> "Permission granted"
-                            ShizukuStatus.Connected -> "Connected"
+                            ShizukuStatus.BinderReceived -> "Binder received"
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -271,10 +267,8 @@ fun ThermometerArc(temperature: Int) {
     ) {
         Canvas(modifier = Modifier.size(120.dp)) {
             val strokeWidth = 12.dp.toPx()
-            val radius = (size.minDimension / 2) - strokeWidth / 2
             val center = Offset(size.width / 2, size.height / 2)
 
-            // Background arc
             drawArc(
                 color = Color.Gray.copy(alpha = 0.3f),
                 startAngle = 140f,
@@ -283,7 +277,6 @@ fun ThermometerArc(temperature: Int) {
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
 
-            // Temperature gradient
             val progress = (temperature / 100f).coerceIn(0f, 1f)
             val sweepAngle = 260f * progress
             val gradient = Brush.sweepGradient(
@@ -323,7 +316,7 @@ fun TargetTemperatureInput(
                     onUpdateTemp(temp.coerceIn(-20, 100))
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Temperature (°C)") },
+                label = { Text("Temperature (Celsius)") },
                 leadingIcon = { Icon(Icons.Default.Thermostat, contentDescription = null) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -339,8 +332,8 @@ fun TargetTemperatureInput(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("-20°C", style = MaterialTheme.typography.labelSmall)
-                Text("100°C", style = MaterialTheme.typography.labelSmall)
+                Text("-20C", style = MaterialTheme.typography.labelSmall)
+                Text("100C", style = MaterialTheme.typography.labelSmall)
             }
         }
     }

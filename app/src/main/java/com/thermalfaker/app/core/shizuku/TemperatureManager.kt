@@ -1,6 +1,7 @@
 package com.thermalfaker.app.core.shizuku
 
 import android.content.Context
+import android.os.BatteryManager
 import com.thermalfaker.app.core.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,8 +39,8 @@ class TemperatureManager @Inject constructor(
 
     fun getCurrentBatteryTemperature(): Int {
         return try {
-            val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
-            batteryManager?.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_TEMPERATURE)?.let { it / 10 } ?: 0
+            val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
+            batteryManager?.getIntProperty(BatteryManager.BATTERY_PROPERTY_TEMPERATURE)?.let { it / 10 } ?: 0
         } catch (e: Exception) {
             Logger.e("Failed to get battery temperature", e)
             0
