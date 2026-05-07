@@ -93,7 +93,7 @@ class HardwareMonitor @Inject constructor(
             if (cpuTemp == -1) {
                 try {
                     val result = shizukuManager.executeShellCommand("dumpsys thermalservice | grep -i cpu")
-                    val regex = "([0-9]+\\.?[0-9]*)".
+                    val regex = "([0-9]+\\.?[0-9]*)".toRegex()
                     val match = regex.find(result)
                     cpuTemp = match?.groupValues?.get(1)?.toFloatOrNull()?.toInt() ?: -1
                 } catch (_: Exception) {
@@ -142,7 +142,7 @@ class HardwareMonitor @Inject constructor(
             if (gpuTemp == -1) {
                 try {
                     val result = shizukuManager.executeShellCommand("dumpsys thermalservice | grep -i gpu")
-                    val regex = "([0-9]+\\.?[0-9]*)".
+                    val regex = "([0-9]+\\.?[0-9]*)".toRegex()
                     val match = regex.find(result)
                     gpuTemp = match?.groupValues?.get(1)?.toFloatOrNull()?.toInt() ?: -1
                 } catch (_: Exception) {
