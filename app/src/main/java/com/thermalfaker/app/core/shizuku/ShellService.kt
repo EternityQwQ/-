@@ -11,7 +11,7 @@ class ShellService : IShellService.Stub {
     constructor()
 
     @Keep
-    constructor(context: Context) {}
+    constructor(_context: Context) {}
 
     override fun destroy() {
         System.exit(0)
