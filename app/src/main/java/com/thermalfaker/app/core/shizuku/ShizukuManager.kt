@@ -1,21 +1,14 @@
 package com.thermalfaker.app.core.shizuku
 
-import android.content.ComponentName
-import android.content.ServiceConnection
+import android.content.Context
 import android.content.pm.PackageManager
-import android.os.IBinder
-import com.thermalfaker.app.BuildConfig
-import com.thermalfaker.app.IShellService
+import android.os.RemoteException
 import com.thermalfaker.app.core.util.Logger
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import rikka.shizuku.Shizuku
-import kotlin.coroutines.resume
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,33 +22,12 @@ sealed class ShizukuStatus {
 
 @Singleton
 class ShizukuManager @Inject constructor(
-    @ApplicationContext private val context: android.content.Context
+    @ApplicationContext private val context: Context
 ) {
     private val _status = MutableStateFlow<ShizukuStatus>(ShizukuStatus.Unavailable)
     val status: StateFlow<ShizukuStatus> = _status.asStateFlow()
 
     private val permissionRequestCode = 1001
-
-    @Volatile
-    private var shellService: IShellService? = null
-
-    private val userServiceArgs = Shizuku.UserServiceArgs(
-        ComponentName(BuildConfig.APPLICATION_ID, "com.thermalfaker.app.core.shizuku.ShellService")
-    ).processNameSuffix("shell_service")
-        .version(BuildConfig.VERSION_CODE)
-        .debuggable(BuildConfig.DEBUG)
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
-            Logger.d("ShellService connected")
-            shellService = IShellService.Stub.asInterface(binder)
-        }
-
-        override fun onServiceDisconnected(componentName: ComponentName) {
-            Logger.d("ShellService disconnected")
-            shellService = null
-        }
-    }
 
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
         Logger.d("Shizuku binder received")
@@ -66,7 +38,6 @@ class ShizukuManager @Inject constructor(
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
         Logger.d("Shizuku binder dead")
         _status.value = ShizukuStatus.Unavailable
-        shellService = null
     }
 
     private val permissionResultListener = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
@@ -96,12 +67,15 @@ class ShizukuManager @Inject constructor(
         try {
             when {
                 Shizuku.isPreV11() -> {
+                    Logger.d("Shizuku pre-v11 detected")
                     _status.value = ShizukuStatus.Unavailable
                 }
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
+                    Logger.d("Shizuku permission already granted")
                     _status.value = ShizukuStatus.PermissionGranted
                 }
                 Shizuku.shouldShowRequestPermissionRationale() -> {
+                    Logger.d("Shizuku permission rationale shown")
                     _status.value = ShizukuStatus.PermissionDenied
                 }
                 else -> {
@@ -118,6 +92,7 @@ class ShizukuManager @Inject constructor(
         return try {
             !Shizuku.isPreV11() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
         } catch (e: Throwable) {
+            Logger.e("Failed to check Shizuku permission", e)
             false
         }
     }
@@ -135,74 +110,32 @@ class ShizukuManager @Inject constructor(
         }
     }
 
-    private suspend fun ensureServiceBound() {
-        shellService?.let {
-            if (it.asBinder().pingBinder()) return
-        }
-
-        withContext(Dispatchers.Main) {
-            suspendCancellableCoroutine { continuation ->
-                val conn = object : ServiceConnection {
-                    override fun onServiceConnected(componentName: ComponentName, binder: IBinder) {
-                        Logger.d("ShellService connected (ensureServiceBound)")
-                        shellService = IShellService.Stub.asInterface(binder)
-                        continuation.resume(Unit)
-                    }
-
-                    override fun onServiceDisconnected(componentName: ComponentName) {
-                        Logger.d("ShellService disconnected (ensureServiceBound)")
-                        shellService = null
-                    }
-                }
-                Shizuku.bindUserService(userServiceArgs, conn)
-                continuation.invokeOnCancellation {
-                    try {
-                        Shizuku.unbindUserService(userServiceArgs, conn, true)
-                    } catch (_: Throwable) {}
-                }
-            }
-        }
-    }
-
-    suspend fun executeShellCommand(command: String): String = withContext(Dispatchers.IO) {
-        try {
+    fun executeShellCommand(command: String): String {
+        return try {
             if (!checkSelfPermission()) {
-                return@withContext "Error: Shizuku permission not granted"
+                return "Error: Shizuku permission not granted"
             }
-
-            ensureServiceBound()
-
-            val service = shellService
-                ?: return@withContext "Error: Shell service not connected"
-
-            service.executeCommand(command)
-        } catch (e: Throwable) {
-            Logger.e("Failed to execute shell command", e)
+            val result = Shizuku.exec(arrayOf("sh", "-c", command), null, null)
+            buildString {
+                if (result.out != null) append(String(result.out))
+                if (result.err != null) append("\nError: ").append(String(result.err))
+            }
+        } catch (e: RemoteException) {
+            Logger.e("Failed to execute shell command via Shizuku", e)
             "Error: ${e.message}"
-        }
-    }
-
-    fun unbindService() {
-        try {
-            shellService?.let {
-                if (it.asBinder().pingBinder()) {
-                    Shizuku.unbindUserService(userServiceArgs, serviceConnection, true)
-                }
-            }
-            shellService = null
         } catch (e: Throwable) {
-            Logger.e("Error unbinding ShellService", e)
+            Logger.e("Unexpected error executing shell command", e)
+            "Error: ${e.message}"
         }
     }
 
     fun cleanup() {
         try {
-            unbindService()
             Shizuku.removeBinderReceivedListener(binderReceivedListener)
             Shizuku.removeBinderDeadListener(binderDeadListener)
             Shizuku.removeRequestPermissionResultListener(permissionResultListener)
         } catch (e: Throwable) {
-            Logger.e("Error cleaning up", e)
+            Logger.e("Error cleaning up Shizuku listeners", e)
         }
     }
 }

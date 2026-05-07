@@ -7,7 +7,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
@@ -38,6 +40,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun MainScreen(
     onNavigateToInfo: () -> Unit,
+    onNavigateToDashboard: () -> Unit,
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -50,8 +53,11 @@ fun MainScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
+                    IconButton(onClick = onNavigateToDashboard) {
+                        Icon(Icons.Default.Dashboard, contentDescription = stringResource(R.string.hardware_dashboard))
+                    }
                     IconButton(onClick = onNavigateToInfo) {
-                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.info))
+                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.about))
                     }
                 }
             )
@@ -65,6 +71,7 @@ fun MainScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Shizuku Status Card
             ShizukuStatusCard(
                 status = shizukuStatus,
                 onRequestPermission = viewModel::requestShizukuPermission
@@ -72,6 +79,12 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Dashboard Navigation Card
+            DashboardNavigationCard(onNavigateToDashboard = onNavigateToDashboard)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Current Temperature Display
             TemperatureDisplay(
                 currentTemp = currentTemp,
                 isSpoofingActive = settings.isBatterySpoofingActive,
@@ -80,6 +93,7 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Target Temperature Input
             TargetTemperatureInput(
                 targetTemp = settings.targetBatteryTemp,
                 onUpdateTemp = viewModel::updateTargetTemp
@@ -87,6 +101,7 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Action Buttons
             ActionButtons(
                 isLoading = uiState.isLoading,
                 isSpoofingActive = settings.isBatterySpoofingActive,
@@ -96,6 +111,7 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Snackbar for messages
             uiState.errorMessage?.let { errorMsg ->
                 Snackbar(
                     modifier = Modifier.padding(16.dp),
@@ -136,19 +152,67 @@ fun MainScreen(
 }
 
 @Composable
+fun DashboardNavigationCard(
+    onNavigateToDashboard: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+        ),
+        onClick = onNavigateToDashboard
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Dashboard,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = stringResource(R.string.hardware_dashboard),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.monitor_and_spoof_all_hardware),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun ShizukuStatusCard(
     status: ShizukuStatus,
     onRequestPermission: () -> Unit
 ) {
-    val isGranted = status == ShizukuStatus.PermissionGranted
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isGranted) {
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-            } else {
-                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
+            containerColor = when (status) {
+                ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
+                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
             }
         )
     ) {
@@ -161,10 +225,10 @@ fun ShizukuStatusCard(
                 Icon(
                     imageVector = Icons.Default.Thermostat,
                     contentDescription = "Shizuku",
-                    tint = if (isGranted) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.error
+                    tint = when (status) {
+                        ShizukuStatus.PermissionGranted, ShizukuStatus.Connected ->
+                            MaterialTheme.colorScheme.primary
+                        else -> MaterialTheme.colorScheme.error
                     }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -180,7 +244,7 @@ fun ShizukuStatusCard(
                             ShizukuStatus.NotInstalled -> stringResource(R.string.shizuku_not_installed)
                             ShizukuStatus.PermissionDenied -> stringResource(R.string.permission_denied)
                             ShizukuStatus.PermissionGranted -> stringResource(R.string.permission_granted)
-                            ShizukuStatus.BinderReceived -> stringResource(R.string.binder_received)
+                            ShizukuStatus.Connected -> stringResource(R.string.connected)
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -269,8 +333,10 @@ fun ThermometerArc(temperature: Int) {
     ) {
         Canvas(modifier = Modifier.size(120.dp)) {
             val strokeWidth = 12.dp.toPx()
+            val radius = (size.minDimension / 2) - strokeWidth / 2
             val center = Offset(size.width / 2, size.height / 2)
 
+            // Background arc
             drawArc(
                 color = Color.Gray.copy(alpha = 0.3f),
                 startAngle = 140f,
@@ -279,6 +345,7 @@ fun ThermometerArc(temperature: Int) {
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
 
+            // Temperature gradient
             val progress = (temperature / 100f).coerceIn(0f, 1f)
             val sweepAngle = 260f * progress
             val gradient = Brush.sweepGradient(

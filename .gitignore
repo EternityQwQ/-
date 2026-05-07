@@ -1,11 +1,3 @@
-# ===== ThermalFaker - 项目专用忽略规则 =====
-# 本地配置文件
-local.properties
-*.properties
-*.keys
-*.jks
-*.keystore
-
 # ===== OS =====
 .DS_Store
 ._*
@@ -19,7 +11,6 @@ Desktop.ini
 .classpath
 .settings/
 *.sublime-*
-*.iml
 
 # ===== Node.js/Frontend =====
 node_modules/
@@ -45,26 +36,12 @@ venv/
 # ===== Rust =====
 target/
 
-# ===== Java/JVM/Android =====
+# ===== Java/JVM =====
 .gradle/
-build/
 *.class
 *.jar
 *.war
 *.ear
-gradle-app.setting
-!gradle-wrapper.jar
-!gradle/wrapper/gradle-wrapper.properties
-.gradletasknamecache
-
-# ===== Android Build =====
-app/build/
-*/build/
-captures/
-.externalNativeBuild
-.cxx/
-local.properties
-signing.properties
 
 # ===== Ruby =====
 .bundle/

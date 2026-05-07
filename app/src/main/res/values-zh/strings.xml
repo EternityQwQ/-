@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">温度伪装器</string>
+    <string name="app_name">设备温度伪装</string>
 
-    <!-- Main Screen -->
+    <!-- 通用 -->
+    <string name="back">返回</string>
+    <string name="refresh">刷新</string>
+    <string name="apply">应用</string>
+    <string name="set">设置</string>
+    <string name="reset">重置</string>
+    <string name="reset_all">全部重置</string>
+    <string name="about">关于</string>
+    <string name="celsius">摄氏度</string>
+    <string name="temperature_celsius">温度 (°C)</string>
+
+    <!-- Shizuku -->
     <string name="shizuku_status">Shizuku 状态</string>
     <string name="shizuku_unavailable">Shizuku 不可用</string>
     <string name="shizuku_not_installed">未安装 Shizuku</string>
     <string name="permission_denied">权限被拒绝</string>
     <string name="permission_granted">权限已授予</string>
-    <string name="binder_received">Binder 已连接</string>
+    <string name="connected">已连接</string>
     <string name="grant_permission">授予权限</string>
+
+    <!-- 温度 -->
     <string name="current_temperature">当前温度</string>
-    <string name="current_spoofed">当前（已伪装）</string>
-    <string name="celsius">摄氏度</string>
-    <string name="refresh">刷新</string>
+    <string name="current_spoofed">当前 (已伪装)</string>
     <string name="target_temperature">目标温度</string>
-    <string name="temperature_celsius">温度（摄氏度）</string>
     <string name="apply_spoof">应用伪装</string>
-    <string name="reset">重置</string>
-    <string name="temperature_applied">温度伪装应用成功</string>
-    <string name="temperature_reset">温度重置成功</string>
 
-    <!-- Info Screen -->
-    <string name="about">关于</string>
-    <string name="version">版本 %s</string>
-    <string name="author">作者</string>
-    <string name="about_this_app">关于此应用</string>
-    <string name="app_description">一款现代化的 Material Design 3 风格 Android 应用，通过 Shizuku 伪装设备温度。支持电池温度伪装，具有精美的动画界面。</string>
-    <string name="features">功能特点</string>
-    <string name="feature_battery_spoofing_title">电池温度伪装</string>
-    <string name="feature_battery_spoofing_desc">通过 Shizuku 使用 dumpsys 命令更改报告的电池温度</string>
-    <string name="feature_quick_reset_title">快速重置</string>
-    <string name="feature_quick_reset_desc">一键轻松恢复真实温度值</string>
-    <string name="feature_animated_ui_title">动画界面</string>
-    <string name="feature_animated_ui_desc">精美的 Material Design 3 界面，带有动画温度计显示</string>
-    <string name="feature_dark_mode_title">深色模式支持</string>
-    <string name="feature_dark_mode_desc">自动切换深色/浅色模式，支持动态颜色</string>
-    <string name="license">许可证</string>
-    <string name="license_text">本应用仅供教育目的。温度伪装可能违反其他应用的服务条款，请谨慎使用。</string>
+    <!-- 硬件仪表盘 -->
+    <string name="hardware_dashboard">硬件仪表盘</string>
+    <string name="monitor_and_spoof_all_hardware">监控并伪装所有硬件温度</string>
+    <string name="last_updated">最后更新</string>
+    <string name="global_temperature_control">全局温度控制</string>
+    <string name="set_all_temperatures_at_once">一键设置所有温度</string>
+    <string name="current">当前</string>
+    <string name="real">真实</string>
+    <string name="spoofed">已伪装</string>
+    <string name="spoofed_to">已伪装为 %d°C</string>
+    <string name="not_supported_on_this_device">此设备不支持</string>
 
-    <!-- Navigation -->
-    <string name="back">返回</string>
-    <string name="info">信息</string>
-
-    <!-- Errors -->
-    <string name="error_shizuku_unavailable">Shizuku 不可用</string>
-    <string name="error_permission_denied">权限被拒绝，请授予 Shizuku 权限</string>
-    <string name="error_execution_failed">命令执行失败</string>
+    <!-- 硬件类型 -->
+    <string name="battery_temperature">电池温度</string>
+    <string name="cpu_temperature">CPU 温度</string>
+    <string name="gpu_temperature">GPU 温度</string>
+    <string name="ambient_temperature">环境温度</string>
+    <string name="cpu_frequencies">CPU 频率</string>
+    <string name="gpu_frequency">GPU 频率</string>
 </resources>

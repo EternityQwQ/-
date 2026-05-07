@@ -2,49 +2,49 @@
 <resources>
     <string name="app_name">ThermalFaker</string>
 
-    <!-- Main Screen -->
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="refresh">Refresh</string>
+    <string name="apply">Apply</string>
+    <string name="set">Set</string>
+    <string name="reset">Reset</string>
+    <string name="reset_all">Reset All</string>
+    <string name="about">About</string>
+    <string name="celsius">Celsius</string>
+    <string name="temperature_celsius">Temperature (°C)</string>
+
+    <!-- Shizuku -->
     <string name="shizuku_status">Shizuku Status</string>
     <string name="shizuku_unavailable">Shizuku unavailable</string>
     <string name="shizuku_not_installed">Shizuku not installed</string>
     <string name="permission_denied">Permission denied</string>
     <string name="permission_granted">Permission granted</string>
-    <string name="binder_received">Binder received</string>
+    <string name="connected">Connected</string>
     <string name="grant_permission">Grant Permission</string>
+
+    <!-- Temperature -->
     <string name="current_temperature">Current Temperature</string>
     <string name="current_spoofed">Current (Spoofed)</string>
-    <string name="celsius">Celsius</string>
-    <string name="refresh">Refresh</string>
     <string name="target_temperature">Target Temperature</string>
-    <string name="temperature_celsius">Temperature (Celsius)</string>
     <string name="apply_spoof">Apply Spoof</string>
-    <string name="reset">Reset</string>
-    <string name="temperature_applied">Temperature spoof applied successfully</string>
-    <string name="temperature_reset">Temperature reset successfully</string>
 
-    <!-- Info Screen -->
-    <string name="about">About</string>
-    <string name="version">Version %s</string>
-    <string name="author">Author</string>
-    <string name="about_this_app">About This App</string>
-    <string name="app_description">A modern, Material Design 3 styled Android application for spoofing device temperatures using Shizuku. Supports battery temperature spoofing with a beautiful, animated interface.</string>
-    <string name="features">Features</string>
-    <string name="feature_battery_spoofing_title">Battery Temperature Spoofing</string>
-    <string name="feature_battery_spoofing_desc">Change reported battery temperature using dumpsys commands via Shizuku</string>
-    <string name="feature_quick_reset_title">Quick Reset</string>
-    <string name="feature_quick_reset_desc">Easily revert to real temperature values with a single tap</string>
-    <string name="feature_animated_ui_title">Animated UI</string>
-    <string name="feature_animated_ui_desc">Beautiful Material Design 3 interface with animated thermometer display</string>
-    <string name="feature_dark_mode_title">Dark Mode Support</string>
-    <string name="feature_dark_mode_desc">Automatic dark/light mode switching with dynamic colors</string>
-    <string name="license">License</string>
-    <string name="license_text">This app is provided for educational purposes only. Temperature spoofing may violate terms of service of other apps. Use responsibly.</string>
+    <!-- Hardware Dashboard -->
+    <string name="hardware_dashboard">Hardware Dashboard</string>
+    <string name="monitor_and_spoof_all_hardware">Monitor and spoof all hardware temperatures</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="global_temperature_control">Global Temperature Control</string>
+    <string name="set_all_temperatures_at_once">Set all temperatures at once</string>
+    <string name="current">Current</string>
+    <string name="real">Real</string>
+    <string name="spoofed">SPOOFED</string>
+    <string name="spoofed_to">Spoofed to %d°C</string>
+    <string name="not_supported_on_this_device">Not supported on this device</string>
 
-    <!-- Navigation -->
-    <string name="back">Back</string>
-    <string name="info">Info</string>
-
-    <!-- Errors -->
-    <string name="error_shizuku_unavailable">Shizuku is not available</string>
-    <string name="error_permission_denied">Permission denied. Please grant Shizuku permission.</string>
-    <string name="error_execution_failed">Command execution failed</string>
+    <!-- Hardware Types -->
+    <string name="battery_temperature">Battery Temperature</string>
+    <string name="cpu_temperature">CPU Temperature</string>
+    <string name="gpu_temperature">GPU Temperature</string>
+    <string name="ambient_temperature">Ambient Temperature</string>
+    <string name="cpu_frequencies">CPU Frequencies</string>
+    <string name="gpu_frequency">GPU Frequency</string>
 </resources>
