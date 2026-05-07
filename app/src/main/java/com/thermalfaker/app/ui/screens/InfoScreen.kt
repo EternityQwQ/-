@@ -21,9 +21,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.thermalfaker.app.R
 import com.thermalfaker.app.ui.theme.ThermalBlue
 import com.thermalfaker.app.ui.theme.ThermalRed
 import com.thermalfaker.app.ui.theme.ThermalYellow
@@ -38,10 +40,10 @@ fun InfoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About") },
+                title = { Text(stringResource(R.string.about)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -86,13 +88,13 @@ fun InfoScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "ThermalFaker",
+                        text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
 
                     Text(
-                        text = "Version 1.0.0",
+                        text = stringResource(R.string.version, "1.0.0"),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -118,7 +120,7 @@ fun InfoScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Author",
+                            contentDescription = stringResource(R.string.author),
                             modifier = Modifier.size(40.dp),
                             tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -176,7 +178,7 @@ fun InfoScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "About This App",
+                            text = stringResource(R.string.about_this_app),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -185,8 +187,7 @@ fun InfoScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "A modern, Material Design 3 styled Android application for spoofing device temperatures using Shizuku. " +
-                               "Supports battery temperature spoofing with a beautiful, animated interface.",
+                        text = stringResource(R.string.app_description),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
@@ -206,7 +207,7 @@ fun InfoScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Features",
+                            text = stringResource(R.string.features),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -215,20 +216,20 @@ fun InfoScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     FeatureItem(
-                        title = "Battery Temperature Spoofing",
-                        description = "Change reported battery temperature using dumpsys commands via Shizuku"
+                        title = stringResource(R.string.feature_battery_spoofing_title),
+                        description = stringResource(R.string.feature_battery_spoofing_desc)
                     )
                     FeatureItem(
-                        title = "Quick Reset",
-                        description = "Easily revert to real temperature values with a single tap"
+                        title = stringResource(R.string.feature_quick_reset_title),
+                        description = stringResource(R.string.feature_quick_reset_desc)
                     )
                     FeatureItem(
-                        title = "Animated UI",
-                        description = "Beautiful Material Design 3 interface with animated thermometer display"
+                        title = stringResource(R.string.feature_animated_ui_title),
+                        description = stringResource(R.string.feature_animated_ui_desc)
                     )
                     FeatureItem(
-                        title = "Dark Mode Support",
-                        description = "Automatic dark/light mode switching with dynamic colors"
+                        title = stringResource(R.string.feature_dark_mode_title),
+                        description = stringResource(R.string.feature_dark_mode_desc)
                     )
                 }
             }
@@ -245,7 +246,7 @@ fun InfoScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "License",
+                            text = stringResource(R.string.license),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -254,7 +255,7 @@ fun InfoScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "This app is provided for educational purposes only. Temperature spoofing may violate terms of service of other apps. Use responsibly.",
+                        text = stringResource(R.string.license_text),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

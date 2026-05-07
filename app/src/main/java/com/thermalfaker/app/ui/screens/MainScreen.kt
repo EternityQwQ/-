@@ -21,10 +21,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.thermalfaker.app.R
 import com.thermalfaker.app.core.shizuku.ShizukuStatus
 import com.thermalfaker.app.ui.theme.ThermalBlue
 import com.thermalfaker.app.ui.theme.ThermalRed
@@ -46,10 +48,10 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("ThermalFaker") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = onNavigateToInfo) {
-                        Icon(Icons.Default.Info, contentDescription = "Info")
+                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.info))
                     }
                 }
             )
@@ -168,17 +170,17 @@ fun ShizukuStatusCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Shizuku Status",
+                        text = stringResource(R.string.shizuku_status),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = when (status) {
-                            ShizukuStatus.Unavailable -> "Shizuku unavailable"
-                            ShizukuStatus.NotInstalled -> "Shizuku not installed"
-                            ShizukuStatus.PermissionDenied -> "Permission denied"
-                            ShizukuStatus.PermissionGranted -> "Permission granted"
-                            ShizukuStatus.BinderReceived -> "Binder received"
+                            ShizukuStatus.Unavailable -> stringResource(R.string.shizuku_unavailable)
+                            ShizukuStatus.NotInstalled -> stringResource(R.string.shizuku_not_installed)
+                            ShizukuStatus.PermissionDenied -> stringResource(R.string.permission_denied)
+                            ShizukuStatus.PermissionGranted -> stringResource(R.string.permission_granted)
+                            ShizukuStatus.BinderReceived -> stringResource(R.string.binder_received)
                         },
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -191,7 +193,7 @@ fun ShizukuStatusCard(
                     onClick = onRequestPermission,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Grant Permission")
+                    Text(stringResource(R.string.grant_permission))
                 }
             }
         }
@@ -219,7 +221,7 @@ fun TemperatureDisplay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = if (isSpoofingActive) "Current (Spoofed)" else "Current Temperature",
+                text = if (isSpoofingActive) stringResource(R.string.current_spoofed) else stringResource(R.string.current_temperature),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium
             )
@@ -241,7 +243,7 @@ fun TemperatureDisplay(
                         }
                     )
                     Text(
-                        text = "Celsius",
+                        text = stringResource(R.string.celsius),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -251,9 +253,9 @@ fun TemperatureDisplay(
                 onClick = onRefresh,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.refresh))
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Refresh")
+                Text(stringResource(R.string.refresh))
             }
         }
     }
@@ -304,7 +306,7 @@ fun TargetTemperatureInput(
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "Target Temperature",
+                text = stringResource(R.string.target_temperature),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -316,7 +318,7 @@ fun TargetTemperatureInput(
                     onUpdateTemp(temp.coerceIn(-20, 100))
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Temperature (Celsius)") },
+                label = { Text(stringResource(R.string.temperature_celsius)) },
                 leadingIcon = { Icon(Icons.Default.Thermostat, contentDescription = null) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -332,8 +334,8 @@ fun TargetTemperatureInput(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("-20C", style = MaterialTheme.typography.labelSmall)
-                Text("100C", style = MaterialTheme.typography.labelSmall)
+                Text("-20°C", style = MaterialTheme.typography.labelSmall)
+                Text("100°C", style = MaterialTheme.typography.labelSmall)
             }
         }
     }
@@ -364,7 +366,7 @@ fun ActionButtons(
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Apply Spoof", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.apply_spoof), style = MaterialTheme.typography.titleMedium)
             }
         }
 
@@ -375,7 +377,7 @@ fun ActionButtons(
             shape = RoundedCornerShape(12.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
-            Text("Reset", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.reset), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
