@@ -36,9 +36,8 @@ data class HardwareInfo(
 
 data class CpuCoreInfo(
     val coreId: Int,
-    val frequencyMHz: Int,
-    val maxFrequencyMHz: Int,
-    val isOnline: Boolean
+    val currentFrequency: Int,
+    val maxFrequency: Int
 )
 
 enum class HardwareType {
@@ -54,8 +53,12 @@ data class SpoofStatus(
 
 data class DashboardState(
     val hardwareInfo: HardwareInfo = HardwareInfo(),
-    val spoofStatuses: List<SpoofStatus> = emptyList(),
-    val isRefreshing: Boolean = false,
-    val hasError: Boolean = false,
-    val errorMessage: String? = null
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val successMessage: String? = null,
+    val globalTemperature: Int? = null,
+    val globalTemperatureInput: Int? = null,
+    val hardwareTemperatureInputs: Map<HardwareType, Int?> = emptyMap(),
+    val spoofStatus: Map<HardwareType, Boolean> = emptyMap(),
+    val lastRefreshTime: Long = 0
 )
