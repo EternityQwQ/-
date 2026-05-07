@@ -1,55 +1,41 @@
 package com.thermalfaker.app.data.model
 
 data class HardwareInfo(
-    val cpuTemp: Int? = null,
-    val cpuTempSupported: Boolean = false,
-    val cpuTempError: String? = null,
-    val batteryTemp: Int? = null,
-    val batteryTempSupported: Boolean = true,
-    val batteryTempError: String? = null,
-    val gpuTemp: Int? = null,
-    val gpuTempSupported: Boolean = false,
-    val gpuTempError: String? = null,
-    val boardTemp: Int? = null,
-    val boardTempSupported: Boolean = false,
-    val boardTempError: String? = null,
-    val cpuFrequency: List<CpuCoreInfo> = emptyList(),
-    val gpuFrequency: Int? = null,
-    val gpuFrequencySupported: Boolean = false,
-    val thermalZones: List<ThermalZoneInfo> = emptyList(),
-    val lastUpdateTime: Long = System.currentTimeMillis()
+    val cpuTemperature: TempInfo = TempInfo(),
+    val gpuTemperature: TempInfo = TempInfo(),
+    val batteryTemperature: TempInfo = TempInfo(),
+    val cpuFrequency: FreqInfo = FreqInfo(),
+    val gpuFrequency: FreqInfo = FreqInfo(),
+    val cpuCoreCount: Int = 0,
+    val cpuUsage: Float = 0f
 )
 
-data class CpuCoreInfo(
-    val coreIndex: Int,
-    val currentFreqMHz: Int,
-    val minFreqMHz: Int,
-    val maxFreqMHz: Int
+data class TempInfo(
+    val realValue: Float = 0f,
+    val spoofedValue: Float = 0f,
+    val isSpoofed: Boolean = false,
+    val isSupported: Boolean = true,
+    val sensorName: String = ""
 )
 
-data class ThermalZoneInfo(
-    val name: String,
-    val path: String,
-    val temperature: Int,
-    val type: String
+data class FreqInfo(
+    val current: Long = 0,
+    val min: Long = 0,
+    val max: Long = 0,
+    val isSupported: Boolean = true
 )
 
-data class SpoofingConfig(
-    val isEnabled: Boolean = false,
-    val targetTemp: Int = 25
+data class MultiTempSettings(
+    val cpuTargetTemp: Int = 30,
+    val gpuTargetTemp: Int = 30,
+    val batteryTargetTemp: Int = 30,
+    val isCpuSpoofing: Boolean = false,
+    val isGpuSpoofing: Boolean = false,
+    val isBatterySpoofing: Boolean = false
 )
 
-data class MultiTemperatureSettings(
-    val globalSpoofEnabled: Boolean = false,
-    val globalTargetTemp: Int = 25,
-    val cpuSpoof: SpoofingConfig = SpoofingConfig(),
-    val batterySpoof: SpoofingConfig = SpoofingConfig(),
-    val gpuSpoof: SpoofingConfig = SpoofingConfig(),
-    val boardSpoof: SpoofingConfig = SpoofingConfig()
-)
-
-data class CommandResult(
-    val success: Boolean,
-    val output: String = "",
-    val error: String = ""
+data class HardwareUiState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val successMessage: String? = null
 )

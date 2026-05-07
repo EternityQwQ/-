@@ -240,3 +240,59 @@ class HardwareInfoManager @Inject constructor(
     fun isBoardTempSupported(): Boolean = true
     fun isGpuFrequencySupported(): Boolean = true
 }
+package com.thermalfakerpackage com.thermalfaker.app.core.hardware
+
+import android.content.Context
+import com.thermalfaker.app.core.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+importpackage com.thermalfaker.app.core.hardware
+
+import android.content.Context
+import com.thermalfaker.app.core.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
+package com.thermalfaker.app.core.hardware
+
+import android.content.Context
+import com.thermalfaker.app.core.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+classpackage com.thermalfaker.app.core.hardware
+
+import android.content.Context
+import com.thermalfaker.app.core.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class HardwareInfoManager @Inject constructor(
+    private val context: Context
+) {
+
+    suspendpackage com.thermalfaker.app.core.hardware
+
+import android.content.Context
+import com.thermalfaker.app.core.util.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class HardwareInfoManager @Inject constructor(
+    private val context: Context
+) {
+
+    suspend fun readCpuTemperature(): Float = withContext
