@@ -1,19 +1,31 @@
 package com.thermalfaker.app.core.util
 
-import android.util.Log
-
 object Logger {
     private const val TAG = "ThermalFaker"
 
+    private var logManager: LogManager? = null
+
+    fun initialize(manager: LogManager) {
+        logManager = manager
+    }
+
     fun d(message: String) {
-        Log.d(TAG, message)
+        logManager?.d(TAG, message) ?: android.util.Log.d(TAG, message)
     }
 
     fun e(message: String, throwable: Throwable? = null) {
-        Log.e(TAG, message, throwable)
+        logManager?.e(TAG, message, throwable) ?: android.util.Log.e(TAG, message, throwable)
     }
 
     fun w(message: String) {
-        Log.w(TAG, message)
+        logManager?.w(TAG, message) ?: android.util.Log.w(TAG, message)
+    }
+
+    fun i(tag: String, message: String) {
+        logManager?.i(tag, message) ?: android.util.Log.i(tag, message)
+    }
+
+    fun i(message: String) {
+        logManager?.i(TAG, message) ?: android.util.Log.i(TAG, message)
     }
 }

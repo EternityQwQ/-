@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.thermalfaker.app.ui.screens.DashboardScreen
 import com.thermalfaker.app.ui.screens.InfoScreen
+import com.thermalfaker.app.ui.screens.LogScreen
 import com.thermalfaker.app.ui.screens.MainScreen
 
 @Composable
@@ -27,6 +28,12 @@ fun ThermalFakerNavHost(navController: NavHostController) {
         }
         composable(Screen.Info.route) {
             InfoScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToLogs = { navController.navigate(Screen.Logs.route) }
+            )
+        }
+        composable(Screen.Logs.route) {
+            LogScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }

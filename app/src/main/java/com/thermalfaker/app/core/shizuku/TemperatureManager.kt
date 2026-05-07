@@ -21,10 +21,13 @@ class TemperatureManager @Inject constructor(
     suspend fun setBatteryTemperature(temperatureCelsius: Int): String = withContext(Dispatchers.IO) {
         try {
             val temperatureTenths = temperatureCelsius * 10
-            val result = shizukuManager.executeShellCommand("dumpsys battery set temp $temperatureTenths")
-            Logger.d("Set battery temp result: $result")
+            val command = "dumpsys battery set temp $temperatureTenths"
+            Logger.d("[ADB] Executing: $command")
+            val result = shizukuManager.executeShellCommand(command)
+            Logger.i("[ADB] Result: $result")
             spoofedTemperatures[HardwareType.BATTERY] = temperatureCelsius
             spoofingActive[HardwareType.BATTERY] = true
+            Logger.i("[SPOOF] Battery temperature spoofed to $temperatureCelsius°C")
             result
         } catch (e: Exception) {
             Logger.e("Failed to set battery temperature", e)
@@ -34,9 +37,12 @@ class TemperatureManager @Inject constructor(
 
     suspend fun resetBatteryTemperature(): String = withContext(Dispatchers.IO) {
         try {
-            val result = shizukuManager.executeShellCommand("dumpsys battery reset")
-            Logger.d("Reset battery temp result: $result")
+            val command = "dumpsys battery reset"
+            Logger.d("[ADB] Executing: $command")
+            val result = shizukuManager.executeShellCommand(command)
+            Logger.i("[ADB] Result: $result")
             spoofingActive[HardwareType.BATTERY] = false
+            Logger.i("[SPOOF] Battery temperature reset to real value")
             result
         } catch (e: Exception) {
             Logger.e("Failed to reset battery temperature", e)
